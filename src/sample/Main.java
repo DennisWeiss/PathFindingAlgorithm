@@ -290,9 +290,24 @@ public class Main extends Application {
         }
     }
 
+    public void updateTile(int i, int j) {
+        if (alg.tile[i][j].walkable) {
+            button[i][j].setStyle("-fx-base: #737373");
+            if (alg.tile[i][j].isStart()) {
+                button[i][j].setStyle("-fx-base: #ffcc66");
+            } else if (alg.tile[i][j].isTarget()) {
+                button[i][j].setStyle("-fx-base: #ff8c66");
+            }else if (alg.tile[i][j].isBelongsToPath()) {
+                button[i][j].setStyle("-fx-base: #ff0000");
+            }
+        } else if (!alg.tile[i][j].walkable){
+            button[i][j].setStyle("-fx-base: #333333");
+        }
+    }
+
     public void setToWalkable(int x, int y) {
         alg.tile[x][y].setWalkable(!alg.tile[x][y].walkable);
-        updateTiles();
+        updateTile(x, y);
     }
 
     public void reset() {
