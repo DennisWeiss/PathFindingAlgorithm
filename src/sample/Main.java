@@ -233,13 +233,29 @@ public class Main extends Application {
 
                 button[i][j].setOnMouseClicked(event -> {
                             if (event.getButton() == MouseButton.PRIMARY) {
+                                removeStartOrTarget(x, y);
                                 setToWalkable(x, y);
+                                alg.resetPath();
+                                updateTiles();
                             } else if (event.getButton() == MouseButton.SECONDARY) {
                                 setToStartOrTarget(x, y);
+                                alg.resetPath();
+                                updateTiles();
                             }
                         }
                 );
             }
+        }
+    }
+
+    private void removeStartOrTarget(int x, int y) {
+        if (alg.tile[x][y].isStart()) {
+            startSet = false;
+            alg.tile[x][y].setStart(false);
+        }
+        if (alg.tile[x][y].isTarget()) {
+            targetSet = false;
+            alg.tile[x][y].setTarget(false);
         }
     }
 
