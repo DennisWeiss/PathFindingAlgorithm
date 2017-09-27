@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.control.Button;
+
 /**
  * Created by weiss on 12/21/2016.
  */
@@ -36,24 +38,24 @@ public class Astaralgorithm {
 
     public void setDistances(int x, int y) {
 
-        if (x > 0 && y > 0) {
+        /*if (x > 0 && y > 0) {
             if (tile[x-1][y-1].walkable && tile[x-1][y-1].awayFromTarget - tile[x][y].awayFromTarget > Math.sqrt(2)) {
                 tile[x-1][y-1].setAwayFromTarget(tile[x][y].getAwayFromTarget() + Math.sqrt(2));
                 setDistances(x-1, y-1);
             }
-        }
+        }*/
         if (x > 0) {
             if (tile[x-1][y].walkable && tile[x-1][y].awayFromTarget - tile[x][y].awayFromTarget > 1) {
                 tile[x-1][y].setAwayFromTarget(tile[x][y].getAwayFromTarget() + 1);
                 setDistances(x-1, y);
             }
         }
-        if (x > 0 && y < height - 1) {
+        /*if (x > 0 && y < height - 1) {
             if (tile[x-1][y+1].walkable && tile[x-1][y+1].awayFromTarget - tile[x][y].awayFromTarget > Math.sqrt(2)) {
                 tile[x-1][y+1].setAwayFromTarget(tile[x][y].getAwayFromTarget() + Math.sqrt(2));
                 setDistances(x-1, y+1);
             }
-        }
+        }*/
         if (y > 0) {
             if (tile[x][y-1].walkable && tile[x][y-1].awayFromTarget - tile[x][y].awayFromTarget > 1) {
                 tile[x][y-1].setAwayFromTarget(tile[x][y].getAwayFromTarget() + 1);
@@ -66,24 +68,24 @@ public class Astaralgorithm {
                 setDistances(x, y+1);
             }
         }
-        if (x < width - 1 && y > 0) {
+        /*if (x < width - 1 && y > 0) {
             if (tile[x+1][y-1].walkable && tile[x+1][y-1].awayFromTarget - tile[x][y].awayFromTarget > Math.sqrt(2)) {
                 tile[x+1][y-1].setAwayFromTarget(tile[x][y].getAwayFromTarget() + Math.sqrt(2));
                 setDistances(x+1, y-1);
             }
-        }
+        }*/
         if (x < width - 1) {
             if (tile[x+1][y].walkable && tile[x+1][y].awayFromTarget - tile[x][y].awayFromTarget > 1) {
                 tile[x+1][y].setAwayFromTarget(tile[x][y].getAwayFromTarget() + 1);
                 setDistances(x+1, y);
             }
         }
-        if (x < width - 1 && y < height - 1) {
+        /*if (x < width - 1 && y < height - 1) {
             if (tile[x + 1][y + 1].walkable && tile[x + 1][y + 1].awayFromTarget - tile[x][y].awayFromTarget > Math.sqrt(2)) {
                 tile[x + 1][y + 1].setAwayFromTarget(tile[x][y].getAwayFromTarget() + Math.sqrt(2));
                 setDistances(x + 1, y + 1);
             }
-        }
+        }*/
     }
 
     public void setStart(int x, int y) {
@@ -105,13 +107,13 @@ public class Astaralgorithm {
         int indexY = startY;
 
         if (!tile[startX][startY].isTarget()) {
-            if (startX > 0 && startY > 0) {
+            /*if (startX > 0 && startY > 0) {
                 if (tile[startX-1][startY-1].walkable && tile[startX-1][startY-1].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX-1][startY-1].getAwayFromTarget();
                     indexX = startX - 1;
                     indexY = startY - 1;
                 }
-            }
+            }*/
             if (startX > 0) {
                 if (tile[startX-1][startY].walkable && tile[startX-1][startY].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX-1][startY].getAwayFromTarget();
@@ -119,13 +121,13 @@ public class Astaralgorithm {
                     indexY = startY;
                 }
             }
-            if (startX > 0 && startY < height - 1) {
+            /*if (startX > 0 && startY < height - 1) {
                 if (tile[startX-1][startY+1].walkable && tile[startX-1][startY+1].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX-1][startY+1].getAwayFromTarget();
                     indexX = startX - 1;
                     indexY = startY + 1;
                 }
-            }
+            }*/
             if (startY > 0) {
                 if (tile[startX][startY-1].walkable && tile[startX][startY-1].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX][startY-1].getAwayFromTarget();
@@ -140,13 +142,13 @@ public class Astaralgorithm {
                     indexY = startY + 1;
                 }
             }
-            if (startX < width - 1 && startY > 0) {
+            /*if (startX < width - 1 && startY > 0) {
                 if (tile[startX+1][startY-1].walkable && tile[startX+1][startY-1].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX+1][startY-1].getAwayFromTarget();
                     indexX = startX + 1;
                     indexY = startY - 1;
                 }
-            }
+            }*/
             if (startX < width - 1) {
                 if (tile[startX+1][startY].walkable && tile[startX+1][startY].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX+1][startY].getAwayFromTarget();
@@ -154,15 +156,20 @@ public class Astaralgorithm {
                     indexY = startY;
                 }
             }
-            if (startX < width - 1 && startY < height - 1) {
+            /*if (startX < width - 1 && startY < height - 1) {
                 if (tile[startX+1][startY+1].walkable && tile[startX+1][startY+1].getAwayFromTarget() < awayFromTarget) {
                     awayFromTarget = tile[startX+1][startY+1].getAwayFromTarget();
                     indexX = startX + 1;
                     indexY = startY + 1;
                 }
-            }
+            }*/
             tile[indexX][indexY].setBelongsToPath(true);
             getPath(indexX, indexY);
         }
+    }
+
+    public void cloning(int startX, int startY, int endX, int endY, Button[][] buttons, Main main) {
+        Thread thread = new Thread(new Cloning(startX, startY, tile, endX, endY, Direction.STAY, buttons));
+        thread.start();
     }
 }

@@ -16,7 +16,7 @@ public class Main extends Application {
     int width = 25;
     int height = 25;
     Astaralgorithm alg = new Astaralgorithm(width, height);
-    Button[][] button;
+    Button[][] buttons;
     boolean startSet = false;
     boolean targetSet;
     int startX;
@@ -121,7 +121,7 @@ public class Main extends Application {
         HBox.setHgrow(gridPane, Priority.ALWAYS);
         VBox.setVgrow(gridPane, Priority.ALWAYS);
 
-        button = new Button[width][height];
+        buttons = new Button[width][height];
 
         initializeButtons();
 
@@ -179,8 +179,9 @@ public class Main extends Application {
                     alg.resetPath();
                     alg.setTarget(targetX, targetY);
                     alg.setDistances(targetX, targetY);
-                    alg.getPath(startX, startY);
-                    updateTiles();
+                    alg.cloning(startX, startY, targetX, targetY, buttons, this);
+                    Thread thread = new Thread(new WaitForTarget(this));
+                    thread.start();
                 }
         );
 
@@ -207,6 +208,17 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    void markPath() {
+        alg.getPath(startX, startY);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (alg.tile[i][j].isBelongsToPath()) {
+                    buttons[i][j].setStyle("-fx-base: #ff0000");
+                }
+            }
+        }
+    }
+
     private void setAllToWalkable() {
         for (int i = 0; i < alg.width; i++) {
             for (int j = 0; j < alg.height; j++) {
@@ -222,16 +234,16 @@ public class Main extends Application {
                 int x = i;
                 int y = j;
 
-                button[i][j] = new Button();
-                HBox.setHgrow(button[i][j], Priority.ALWAYS);
-                VBox.setVgrow(button[i][j], Priority.ALWAYS);
-                gridPane.setHgrow(button[i][j], Priority.ALWAYS);
-                gridPane.setVgrow(button[i][j], Priority.ALWAYS);
-                button[i][j].setMinSize(1, 1);
-                button[i][j].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                gridPane.add(button[i][j], i, j);
+                buttons[i][j] = new Button();
+                HBox.setHgrow(buttons[i][j], Priority.ALWAYS);
+                VBox.setVgrow(buttons[i][j], Priority.ALWAYS);
+                gridPane.setHgrow(buttons[i][j], Priority.ALWAYS);
+                gridPane.setVgrow(buttons[i][j], Priority.ALWAYS);
+                buttons[i][j].setMinSize(1, 1);
+                buttons[i][j].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                gridPane.add(buttons[i][j], i, j);
 
-                button[i][j].setOnMouseClicked(event -> {
+                buttons[i][j].setOnMouseClicked(event -> {
                             if (event.getButton() == MouseButton.PRIMARY) {
                                 removeStartOrTarget(x, y);
                                 setToWalkable(x, y);
@@ -291,33 +303,34 @@ public class Main extends Application {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (alg.tile[i][j].walkable) {
-                    button[i][j].setStyle("-fx-base: #737373");
+                    buttons[i][j].setStyle("-fx-base: #737373");
                     if (alg.tile[i][j].isStart()) {
-                        button[i][j].setStyle("-fx-base: #ffcc66");
+                        buttons[i][j].setStyle("-fx-base: #ffcc66");
                     } else if (alg.tile[i][j].isTarget()) {
-                        button[i][j].setStyle("-fx-base: #ff8c66");
+                        buttons[i][j].setStyle("-fx-base: #ff8c66");
                     }else if (alg.tile[i][j].isBelongsToPath()) {
-                        button[i][j].setStyle("-fx-base: #ff0000");
+                        buttons[i][j].setStyle("-fx-base: #ff0000");
                     }
                 } else if (!alg.tile[i][j].walkable){
-                    button[i][j].setStyle("-fx-base: #333333");
+                    buttons[i][j].setStyle("-fx-base: #333333");
                 }
             }
         }
+        Cloning.foundTarget = false;
     }
 
     public void updateTile(int i, int j) {
         if (alg.tile[i][j].walkable) {
-            button[i][j].setStyle("-fx-base: #737373");
+            buttons[i][j].setStyle("-fx-base: #737373");
             if (alg.tile[i][j].isStart()) {
-                button[i][j].setStyle("-fx-base: #ffcc66");
+                buttons[i][j].setStyle("-fx-base: #ffcc66");
             } else if (alg.tile[i][j].isTarget()) {
-                button[i][j].setStyle("-fx-base: #ff8c66");
+                buttons[i][j].setStyle("-fx-base: #ff8c66");
             }else if (alg.tile[i][j].isBelongsToPath()) {
-                button[i][j].setStyle("-fx-base: #ff0000");
+                buttons[i][j].setStyle("-fx-base: #ff0000");
             }
         } else if (!alg.tile[i][j].walkable){
-            button[i][j].setStyle("-fx-base: #333333");
+            buttons[i][j].setStyle("-fx-base: #333333");
         }
     }
 
@@ -327,7 +340,7 @@ public class Main extends Application {
     }
 
     public void reset() {
-        button = new Button[width][height];
+        buttons = new Button[width][height];
         initializeButtons();
         alg.reset();
         startSet = false;
