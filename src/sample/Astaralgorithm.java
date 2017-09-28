@@ -168,8 +168,8 @@ public class Astaralgorithm {
         }
     }
 
-    public void cloning(int startX, int startY, int endX, int endY, Button[][] buttons, Main main) {
-        Thread thread = new Thread(new Cloning(startX, startY, tile, endX, endY, Direction.STAY, buttons));
+    public void cloning(int startX, int startY, int endX, int endY, Button[][] buttons, long speed) {
+        Thread thread = new Thread(new Cloning(startX, startY, tile, endX, endY, Direction.STAY, buttons, speed));
         thread.start();
     }
 }

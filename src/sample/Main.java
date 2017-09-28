@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -101,6 +103,8 @@ public class Main extends Application {
         MenuItem go = new MenuItem("Calculate Path");
         MenuItem reset = new MenuItem("Reset");
 
+        Slider  speed = new Slider();
+
         VBox vBox = new VBox();
         HBox hBox = new HBox();
         gridPane = new GridPane();
@@ -179,7 +183,7 @@ public class Main extends Application {
                     alg.resetPath();
                     alg.setTarget(targetX, targetY);
                     alg.setDistances(targetX, targetY);
-                    alg.cloning(startX, startY, targetX, targetY, buttons, this);
+                    alg.cloning(startX, startY, targetX, targetY, buttons, (long) (1000 - 10 * Math.sqrt(speed.getValue())));
                     Thread thread = new Thread(new WaitForTarget(this));
                     thread.start();
                 }
@@ -201,8 +205,23 @@ public class Main extends Application {
         borderPane.setTop(menuBar);
         borderPane.setCenter(vBox);
 
+        speed.setMin(0);
+        speed.setMax(10000);
+        speed.setValue(5000);
+
+        vBox.getChildren().add(speed);
+
         primaryStage.setTitle("Path Finding Tool");
         Scene scene = new Scene(borderPane, 1024, 768);
+
+        speed.setPadding(new Insets(0, scene.getWidth()/3,5,scene.getWidth()/3));
+
+        scene.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                speed.setPadding(new Insets(0, scene.getWidth()/3,5,scene.getWidth()/3));
+            }
+        });
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -212,7 +231,7 @@ public class Main extends Application {
         alg.getPath(startX, startY);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (alg.tile[i][j].isBelongsToPath()) {
+                if (alg.tile[i][j].isBelongsToPath() && !alg.tile[i][j].isStart() && !alg.tile[i][j].isTarget()) {
                     buttons[i][j].setStyle("-fx-base: #ff0000");
                 }
             }

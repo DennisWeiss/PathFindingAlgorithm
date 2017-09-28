@@ -10,6 +10,7 @@ public class Cloning implements Runnable {
     int endX;
     int endY;
     Direction direction;
+    long speed;
 
     Button[][] buttons;
 
@@ -17,10 +18,15 @@ public class Cloning implements Runnable {
 
     @Override
     public void run() {
-        searchPath(startX, startY, maze, endX, endY, direction);
+        try {
+            searchPath(startX, startY, maze, endX, endY, direction);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public Cloning(int startX, int startY, Tile[][] maze, int endX, int endY, Direction direction, Button[][] buttons) {
+    public Cloning(int startX, int startY, Tile[][] maze, int endX, int endY, Direction direction, Button[][] buttons, long speed) {
         this.startX = startX;
         this.startY = startY;
         this.maze = maze;
@@ -28,12 +34,13 @@ public class Cloning implements Runnable {
         this.endY = endY;
         this.direction = direction;
         this.buttons = buttons;
+        this.speed = speed;
     }
 
     public synchronized void searchPath(int startX, int startY, Tile[][] maze, int endX, int endY, Direction direction) {
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(speed);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -93,13 +100,13 @@ public class Cloning implements Runnable {
                 Thread[] threads = new Thread[possibleDirections.size() - 1];
                 for (int i = 1; i < possibleDirections.size(); i++) {
                     if (possibleDirections.get(i) == Direction.RIGHT) {
-                        threads[i - 1] = new Thread(new Cloning(startX + 1, startY, maze, endX, endY, Direction.RIGHT, buttons));
+                        threads[i - 1] = new Thread(new Cloning(startX + 1, startY, maze, endX, endY, Direction.RIGHT, buttons, speed));
                     } else if (possibleDirections.get(i) == Direction.LEFT) {
-                        threads[i - 1] = new Thread(new Cloning(startX - 1, startY, maze, endX, endY, Direction.LEFT, buttons));
+                        threads[i - 1] = new Thread(new Cloning(startX - 1, startY, maze, endX, endY, Direction.LEFT, buttons, speed));
                     } else if (possibleDirections.get(i) == Direction.UP) {
-                        threads[i - 1] = new Thread(new Cloning(startX, startY - 1, maze, endX, endY, Direction.UP, buttons));
+                        threads[i - 1] = new Thread(new Cloning(startX, startY - 1, maze, endX, endY, Direction.UP, buttons, speed));
                     } else if (possibleDirections.get(i) == Direction.DOWN) {
-                        threads[i - 1] = new Thread(new Cloning(startX, startY + 1, maze, endX, endY, Direction.DOWN, buttons));
+                        threads[i - 1] = new Thread(new Cloning(startX, startY + 1, maze, endX, endY, Direction.DOWN, buttons, speed));
                     }
                 }
                 for (int i = 0; i < threads.length; i++) {
@@ -123,8 +130,9 @@ public class Cloning implements Runnable {
 
     void markGreen(int x, int y) {
         if (!foundTarget) {
-            //System.out.println("mark yellow " + x + " " + y);
-            buttons[x][y].setStyle("-fx-base: #00FF00");
+            if (!maze[x][y].isStart() && !maze[x][y].isTarget()) {
+                buttons[x][y].setStyle("-fx-base: #00FF00");
+            }
         }
     }
 }
