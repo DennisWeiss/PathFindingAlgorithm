@@ -58,28 +58,28 @@ public class Cloning implements Runnable {
             }
             ArrayList<Direction> possibleDirections = new ArrayList<>();
             try {
-                if (maze[startX + 1][startY].walkable && direction != Direction.LEFT) {
+                if (maze[startX + 1][startY].walkable && !maze[startX + 1][startY].isMarked() && direction != Direction.LEFT) {
                     possibleDirections.add(Direction.RIGHT);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
 
             }
             try {
-                if (maze[startX - 1][startY].walkable && direction != Direction.RIGHT) {
+                if (maze[startX - 1][startY].walkable && !maze[startX - 1][startY].isMarked() && direction != Direction.RIGHT) {
                     possibleDirections.add(Direction.LEFT);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
 
             }
             try {
-                if (maze[startX][startY - 1].walkable && direction != Direction.DOWN) {
+                if (maze[startX][startY - 1].walkable && !maze[startX][startY - 1].isMarked() && direction != Direction.DOWN) {
                     possibleDirections.add(Direction.UP);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
 
             }
             try {
-                if (maze[startX][startY + 1].walkable && direction != Direction.UP) {
+                if (maze[startX][startY + 1].walkable && !maze[startX][startY + 1].isMarked() && direction != Direction.UP) {
                     possibleDirections.add(Direction.DOWN);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -131,6 +131,7 @@ public class Cloning implements Runnable {
     void markGreen(int x, int y) {
         if (!foundTarget) {
             if (!maze[x][y].isStart() && !maze[x][y].isTarget()) {
+                maze[x][y].mark();
                 buttons[x][y].setStyle("-fx-base: #00FF00");
             }
         }

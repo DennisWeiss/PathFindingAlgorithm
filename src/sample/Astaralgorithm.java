@@ -97,6 +97,7 @@ public class Astaralgorithm {
             for (int j = 0; j < height; j++) {
                 tile[i][j].setAwayFromTarget(Double.MAX_VALUE);
                 tile[i][j].setBelongsToPath(false);
+                tile[i][j].setMarked(false);
             }
         }
     }

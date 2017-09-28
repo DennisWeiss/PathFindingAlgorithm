@@ -9,21 +9,24 @@ public class Tile {
     boolean belongsToPath;
     boolean isStart;
     boolean isTarget;
+    boolean marked;
 
-    Tile() {
+    public Tile() {
         this.walkable = false;
         this.awayFromTarget = Double.MAX_VALUE;
         this.belongsToPath = false;
         this.isStart = false;
         this.isTarget = false;
+        this.marked = false;
     }
 
-    public Tile(boolean walkable, double awayFromTarget, boolean belongsToPath, boolean isStart, boolean isTarget) {
+    public Tile(boolean walkable, double awayFromTarget, boolean belongsToPath, boolean isStart, boolean isTarget, boolean marked) {
         this.walkable = walkable;
         this.awayFromTarget = awayFromTarget;
         this.belongsToPath = belongsToPath;
         this.isStart = isStart;
         this.isTarget = isTarget;
+        this.marked = marked;
     }
 
     public void setAwayFromTarget(double distance) {
@@ -60,5 +63,21 @@ public class Tile {
 
     public boolean isBelongsToPath() {
         return belongsToPath;
+    }
+
+    public boolean isWalkable() {
+        return walkable;
+    }
+
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void setMarked(boolean marked) {
+        this.marked = marked;
+    }
+
+    public void mark() {
+        this.marked = true;
     }
 }

@@ -100,6 +100,7 @@ public class Main extends Application {
         MenuItem saveAs = new MenuItem("Save As");
         MenuItem load = new MenuItem("Load");
         MenuItem setAllWalkable = new MenuItem("Set all Tiles to walkable");
+        MenuItem setAllWalls = new MenuItem("Set all Tiles to walls");
         MenuItem go = new MenuItem("Calculate Path");
         MenuItem reset = new MenuItem("Reset");
 
@@ -189,16 +190,21 @@ public class Main extends Application {
                 }
         );
 
-        reset.setOnAction(event ->
-                reset()
-        );
+        reset.setOnAction(event -> {
+            alg.resetPath();
+            updateTiles();
+        });
 
         setAllWalkable.setOnAction(event ->
                 setAllToWalkable()
         );
 
+        setAllWalls.setOnAction(event ->
+                setAllWalls()
+        );
+
         file.getItems().addAll(newTiles, new SeparatorMenuItem(), save, saveAs, new SeparatorMenuItem(), load);
-        tool.getItems().addAll(setAllWalkable, go, reset);
+        tool.getItems().addAll(setAllWalkable, setAllWalls, go, reset);
         menuBar.getMenus().addAll(file, tool);
         hBox.getChildren().addAll(gridPane);
         vBox.getChildren().addAll(hBox);
@@ -242,6 +248,15 @@ public class Main extends Application {
         for (int i = 0; i < alg.width; i++) {
             for (int j = 0; j < alg.height; j++) {
                 alg.tile[i][j].setWalkable(true);
+            }
+        }
+        updateTiles();
+    }
+
+    private void setAllWalls() {
+        for (int i = 0; i < alg.width; i++) {
+            for (int j = 0; j < alg.height; j++) {
+                alg.tile[i][j].setWalkable(false);
             }
         }
         updateTiles();
